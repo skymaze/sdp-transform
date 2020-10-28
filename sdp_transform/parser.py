@@ -68,7 +68,7 @@ def parse(sdp: str) -> dict:
     return session
 
 def paramReducer(acc, expr):
-    s = expr.split('=')
+    s = expr.split('=', 1)
     if len(s) == 2:
         acc[s[0]] = toIntIfInt(s[1])
     elif len(s) == 1 and len(expr) > 1:
