@@ -59,7 +59,7 @@ grammar = {
             'push': 'rtp',
             'reg': "^rtpmap:(\d*) ([\w\-.]*)(?:\s*\/(\d*)(?:\s*\/(\S*))?)?",
             'names': ['payload', 'codec', 'rate', 'encoding'],
-            'format': lambda o:  'rtpmap:%d %s/%s/%s' if o.get('encoding') else ('rtpmap:%d %s/%s' if o.get('rate') else 'rtpmap:%d %s')
+            'format': lambda o:  'rtpmap:%d %s/%s/%s' if o.get('encoding') != None else ('rtpmap:%d %s/%s' if o.get('rate') != None else 'rtpmap:%d %s')
         },
         {
             # a=fmtp:108 profile-level-id=24;object=23;bitrate=64000
@@ -80,7 +80,7 @@ grammar = {
             'name': 'rtcp',
             'reg': "^rtcp:(\d*)(?: (\S*) IP(\d) (\S*))?",
             'names': ['port', 'netType', 'ipVer', 'address'],
-            'format': lambda o: 'rtcp:%d %s IP%d %s' if o.get('address') else 'rtcp:%d'
+            'format': lambda o: 'rtcp:%d %s IP%d %s' if o.get('address') != None else 'rtcp:%d'
         },
         {
             # a=rtcp-fb:98 trr-int 100
@@ -94,7 +94,7 @@ grammar = {
             'push': 'rtcpFb',
             'reg': "^rtcp-fb:(\*|\d*) ([\w\-_]*)(?: ([\w\-_]*))?",
             'names': ['payload', 'type', 'subtype'],
-            'format': lambda o: 'rtcp-fb:%s %s %s' if o.get('subtype') else 'rtcp-fb:%s %s'
+            'format': lambda o: 'rtcp-fb:%s %s %s' if o.get('subtype') != None else 'rtcp-fb:%s %s'
         },
         {
             # a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
@@ -103,7 +103,7 @@ grammar = {
             'push': 'ext',
             'reg': "^extmap:(\d+)(?:\/(\w+))?(?: (urn:ietf:params:rtp-hdrext:encrypt))? (\S*)(?: (\S*))?",
             'names': ['value', 'direction', 'encrypt-uri', 'uri', 'config'],
-            'format': lambda o: 'extmap:%d' + ('/%s' if o.get('direction') else '') + (' %s' if o.get('encrypt-uri') else '') + ' %s' + (' %s' if o.get('config') else '')
+            'format': lambda o: 'extmap:%d' + ('/%s' if o.get('direction') != None else '') + (' %s' if o.get('encrypt-uri') != None else '') + ' %s' + (' %s' if o.get('config') != None else '')
         },
         {
             # a=extmap-allow-mixed
@@ -115,7 +115,7 @@ grammar = {
             'push': 'crypto',
             'reg': "^crypto:(\d*) ([\w_]*) (\S*)(?: (\S*))?",
             'names': ['id', 'suite', 'config', 'sessionConfig'],
-            'format': lambda o: 'crypto:%d %s %s %s' if o.get('sessionConfig') else 'crypto:%d %s %s'
+            'format': lambda o: 'crypto:%d %s %s %s' if o.get('sessionConfig') != None else 'crypto:%d %s %s'
         },
         {
             # a=setup:actpass
@@ -145,7 +145,7 @@ grammar = {
             # a=ptime:20
             'name': 'ptime',
             'reg': "^ptime:(\d*(?:\.\d*)*)",
-            'format': 'ptime:%d'
+            'format': lambda o: 'ptime:%d' if isinstance(o, int) else 'ptime:%f'
         },
         {
             # a=maxptime:60
@@ -192,11 +192,11 @@ grammar = {
             'reg': "^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcpfield (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?",
             'names': ['foundation', 'component', 'transport', 'priority', 'ip', 'port', 'type', 'raddr', 'rport', 'tcptype', 'generation', 'network-id', 'network-cost'],
             'format': lambda o: 'candidate:%s %d %s %d %s %d typ %s' +
-            (' raddr %s rport %d' if o.get('raddr') else '') +
-            (' tcpfield %s' if o.get('tcptype') else '') +
-            (' generation %d' if o.get('generation') else '') +
-            (' network-id %d' if o.get('network-id') else '') +
-            (' network-cost %d' if o.get('network-cost') else '')
+            (' raddr %s rport %d' if o.get('raddr') != None else '') +
+            (' tcpfield %s' if o.get('tcptype') != None else '') +
+            (' generation %d' if o.get('generation') != None else '') +
+            (' network-id %d' if o.get('network-id') != None else '') +
+            (' network-cost %d' if o.get('network-cost') != None else '')
         },
         {
             # a=end-of-candidates (keep after the candidates line for readability)
@@ -220,7 +220,7 @@ grammar = {
             'push': 'ssrcs',
             'reg': "^ssrc:(\d*) ([\w_-]*)(?::(.*))?",
             'names': ['id', 'attribute', 'value'],
-            'format': lambda o: 'ssrc:%d' + (' %s' if o.get('attribute') else '') + (':%s' if o.get('value') else '')
+            'format': lambda o: 'ssrc:%d' + (' %s' if o.get('attribute') != None else '') + (':%s' if o.get('value') != None else '')
         },
         {
             # a=ssrc-group:FEC 1 2
@@ -260,7 +260,7 @@ grammar = {
             'name': 'sctpmap',
             'reg': "^sctpmap:([\w_/]*) (\S*)(?: (\S*))?",
             'names': ['sctpmapNumber', 'app', 'maxMessageSize'],
-            'format': lambda o: 'sctpmap:%s %s %s' if o.get('maxMessageSize') else 'sctpmap:%s %s'
+            'format': lambda o: 'sctpmap:%s %s %s' if o.get('maxMessageSize') != None else 'sctpmap:%s %s'
         },
         {
             # a=x-google-flag:conference
@@ -273,7 +273,7 @@ grammar = {
             'push': 'rids',
             'reg': "^rid:([\d\w]+) (\w+)(?: ([\S| ]*))?",
             'names': ['id', 'direction', 'params'],
-            'format': lambda o: 'rid:%s %s %s' if o.get('params') else 'rid:%s %s'
+            'format': lambda o: 'rid:%s %s %s' if o.get('params') != None else 'rid:%s %s'
         },
         {
             # a=imageattr:97 send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320] recv [x=330,y=250]
@@ -289,7 +289,7 @@ grammar = {
                 '(?:[\\s\\t]+(recv|send)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*))?'
             ),
             'names': ['pt', 'dir1', 'attrs1', 'dir2', 'attrs2'],
-            'format': lambda o: 'imageattr:%s %s %s' + (' %s %s' if o.get('dir2') else '')
+            'format': lambda o: 'imageattr:%s %s %s' + (' %s %s' if o.get('dir2') != None else '')
         },
         {
             # a=simulcast:send 1,2,3;~4,~5 recv 6;~7,~8
@@ -306,7 +306,7 @@ grammar = {
                 '$'
             ),
             'names': ['dir1', 'list1', 'dir2', 'list2'],
-            'format': lambda o: 'simulcast:%s %s' + (' %s %s' if o.get('dir2') else '')
+            'format': lambda o: 'simulcast:%s %s' + (' %s %s' if o.get('dir2') != None else '')
         },
         {
             # old simulcast draft 03 (implemented by Firefox)
@@ -364,7 +364,7 @@ grammar = {
             'push': 'tsRefClocks',
             'reg': "^ts-refclk:([^\s=]*)(?:=(\S*))?",
             'names': ['clksrc', 'clksrcExt'],
-            'format': lambda o: 'ts-refclk:%s' + ('=%s' if o.get('clksrcExt') else '')
+            'format': lambda o: 'ts-refclk:%s' + ('=%s' if o.get('clksrcExt') != None else '')
         },
         {
             # RFC7273
@@ -373,10 +373,10 @@ grammar = {
             'reg': "^mediaclk:(?:id=(\S*))? *([^\s=]*)(?:=(\S*))?(?: *rate=(\d+)\/(\d+))?",
             'names': ['id', 'mediaClockName', 'mediaClockValue', 'rateNumerator', 'rateDenominator'],
             'format': lambda o: 'mediaclk:' +
-            ('id=%s %s' if o.get('id') else '%s') +
-            ('=%s' if o.get('mediaClockValue') else '') +
-            (' rate=%s' if o.get('rateNumerator') else '') +
-            ('/%s' if o.get('rateDenominator') else '')
+            ('id=%s %s' if o.get('id') != None else '%s') +
+            ('=%s' if o.get('mediaClockValue') != None else '') +
+            (' rate=%s' if o.get('rateNumerator') != None else '') +
+            ('/%s' if o.get('rateDenominator') != None else '')
         },
         {
             # a=keywds:keywords

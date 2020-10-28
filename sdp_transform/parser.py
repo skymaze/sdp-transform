@@ -8,7 +8,10 @@ def toIntIfInt(v):
     try:
         return int(v)
     except ValueError:
-        return v
+        try:
+            return float(v)
+        except:
+            return v
 
 def attachProperties(match, location, names=None, rawName=None):
     if rawName and not names:
@@ -55,8 +58,8 @@ def parse(sdp: str) -> dict:
                 'fmtp': []
             })
             location = media[-1]
-
-        for obj in grammar[field]:
+        
+        for obj in grammar.get(field,[]):
             if re.match(obj['reg'], content):
                 parseReg(obj, location, content)
                 break
@@ -74,3 +77,44 @@ def paramReducer(acc, expr):
 
 def parseParams(string: str):
     return reduce(paramReducer, re.split(r';\s?', string), {})
+
+def parsePayloads(string: str):
+    return [int(p) for p in string.split(' ')]
+
+def parseRemoteCandidates(string: str):
+    candidates = []
+    parts = [toIntIfInt(p) for p in string.split(' ')]
+    i = 0
+    while i < len(parts):
+        candidates.append({
+            'component': parts[i],
+            'ip': parts[i + 1],
+            'port': parts[i + 2]
+        })
+        i += 3
+    return candidates
+
+def parseImageAttributes(string: str):
+    return [reduce(paramReducer, item[1:-1].split(','), {}) for item in string.split(' ')]
+
+def parseSimulcastStreamList(string: str):
+    streams = []
+    streamStrs = string.split(';')
+    for streamStr in streamStrs:
+        formats = []
+        formatStrs = streamStr.split(',')
+        for formatStr in formatStrs:
+            scid = False
+            paused = False
+            if formatStr[0] != '~':
+                scid = toIntIfInt(formatStr)
+            else:
+                scid = toIntIfInt(formatStr[1:])
+                paused = True
+            formats.append({
+                'scid': scid,
+                'paused': paused
+            })
+
+        streams.append(formats)
+    return streams            

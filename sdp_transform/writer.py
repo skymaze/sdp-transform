@@ -7,7 +7,8 @@ def makeLine(field, obj, location):
     if obj.get('names'):
         for name in obj.get('names'):
             if obj.get('name'):
-                args.append(location[obj.get('name')][name])
+                if location[obj.get('name')].get(name) != None:
+                    args.append(location[obj.get('name')][name])
             else:
                 if location.get(name) != None:
                     args.append(location[name])
