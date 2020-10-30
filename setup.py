@@ -12,13 +12,13 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'sdp-transfrom'
+NAME = 'sdp-transform'
 DESCRIPTION = 'A simple Python parser and writer of SDP.'
 URL = 'https://github.com/skymaze/sdp-transform'
 EMAIL = 'maze1024@gmail.com'
 AUTHOR = 'Jiang Yue'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '1.0.1'
+VERSION = '1.0.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = []
