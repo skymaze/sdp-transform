@@ -190,7 +190,7 @@ grammar = {
             # a=candidate:3289912957 2 tcp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 tcpfield passive generation 0 network-id 3 network-cost 10
             'push': 'candidates',
             'reg': "^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcpfield (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?",
-            'names': ['foundation', 'component', 'transport', 'priority', 'ip', 'port', 'type', 'raddr', 'rport', 'tcptype', 'generation', 'network-id', 'network-cost'],
+            'names': ['foundation', 'component', 'protocol', 'priority', 'ip', 'port', 'type', 'raddr', 'rport', 'tcptype', 'generation', 'network-id', 'network-cost'],
             'format': lambda o: 'candidate:%s %d %s %d %s %d typ %s' +
             (' raddr %s rport %d' if o.get('raddr') != None else '') +
             (' tcpfield %s' if o.get('tcptype') != None else '') +
