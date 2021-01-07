@@ -87,7 +87,7 @@ grammar = {
             'push': 'rtcpFbTrrInt',
             'reg': "^rtcp-fb:(\*|\d*) trr-int (\d*)",
             'names': ['payload', 'value'],
-            'format': 'rtcp-fb:%d trr-int %d'
+            'format': 'rtcp-fb:%s trr-int %d'
         },
         {
             # a=rtcp-fb:98 nack rpsi
