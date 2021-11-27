@@ -145,7 +145,7 @@ grammar = {
             # a=ptime:20
             'name': 'ptime',
             'reg': "^ptime:(\d*(?:\.\d*)*)",
-            'format': lambda o: 'ptime:%d' if isinstance(o, int) else 'ptime:%f'
+            'format': lambda o: 'ptime:%d' if isinstance(o, int) else 'ptime:%g'
         },
         {
             # a=maxptime:60
