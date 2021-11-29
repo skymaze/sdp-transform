@@ -18,7 +18,7 @@ URL = 'https://github.com/skymaze/sdp-transform'
 EMAIL = 'maze1024@gmail.com'
 AUTHOR = 'Jiang Yue'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 # What packages are required for this module to be executed?
 REQUIRED = []
