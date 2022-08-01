@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "sdp-transform"
+version = "1.0.3"
+description = "A simple Python parser and writer of SDP."
+authors = ["Jiang Yue <maze1024@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.6.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
