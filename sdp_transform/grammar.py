@@ -130,12 +130,6 @@ grammar = {
             'format': 'connection:%s'
         },
         {
-            # a=mid:1
-            'name': 'mid',
-            'reg': "^mid:([^\s]*)",
-            'format': 'mid:%s'
-        },
-        {
             # a=msid:0c8b064d-d807-43b4-b434-f92a889d8587 98178685-d409-46e0-8e16-7ef0db0db64a
             'name': 'msid',
             'reg': "^msid:(.*)",
@@ -420,6 +414,12 @@ grammar = {
             # any a= that we don't understand is kept verbatim on media.invalid
             'push': 'invalid',
             'names': ['value']
+        },
+        {
+            # a=mid:1
+            'name': 'mid',
+            'reg': "^mid:([^\s]*)",
+            'format': 'mid:%s'
         }
     ]
 }
