@@ -67,4 +67,4 @@ def write(session: dict, outerOrder: list=defaultOuterOrder, innerOrder:list=def
                             for el in mLine.get(obj['push']):
                                 sdp.append(makeLine(field, obj, el))
 
-    return '\r\n'.join(sdp)
+    return '\r\n'.join([*sdp, ''])
