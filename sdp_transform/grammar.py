@@ -411,16 +411,16 @@ grammar = {
             'format': 'floorid:%s mstrm:%s'
         },
         {
-            # any a= that we don't understand is kept verbatim on media.invalid
-            'push': 'invalid',
-            'names': ['value']
-        },
-        {
             # a=mid:1
             'name': 'mid',
             'reg': "^mid:([^\s]*)",
             'format': 'mid:%s'
-        }
+        },
+        {
+            # any a= that we don't understand is kept verbatim on media.invalid
+            'push': 'invalid',
+            'names': ['value']
+        },
     ]
 }
 
