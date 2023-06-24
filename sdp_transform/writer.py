@@ -43,7 +43,7 @@ def write(
 
     for media in session.get("media", []):
         if media.get("payloads") == None:
-            media.payloads = ""
+            media["payloads"] = ""
 
     sdp = []
 
