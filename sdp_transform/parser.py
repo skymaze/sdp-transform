@@ -10,7 +10,7 @@ def toIntIfInt(v):
     except ValueError:
         try:
             return float(v)
-        except:
+        except ValueError:
             return v
 
 
@@ -20,7 +20,7 @@ def attachProperties(match, location, names=None, rawName=None):
     else:
         i = 0
         while i < len(names):
-            if match[i + 1] != None:
+            if match[i + 1] is not None:
                 location[names[i]] = toIntIfInt(match[i + 1])
             i += 1
     return
@@ -54,9 +54,9 @@ def parse(sdp: str) -> dict:
     media = []
     location = session
     lines = [line for line in sdp.splitlines() if re.match(r"^([a-z])=(.*)", line)]
-    for l in lines:
-        field = l[0]
-        content = l[2:]
+    for line in lines:
+        field = line[0]
+        content = line[2:]
 
         if field == "m":
             media.append({"rtp": [], "fmtp": []})

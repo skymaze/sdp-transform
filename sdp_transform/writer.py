@@ -15,10 +15,10 @@ def makeLine(field, obj, location):
     if obj.get("names"):
         for name in obj.get("names"):
             if obj.get("name"):
-                if location[obj.get("name")].get(name) != None:
+                if location[obj.get("name")].get(name) is not None:
                     args.append(location[obj.get("name")][name])
             else:
-                if location.get(name) != None:
+                if location.get(name) is not None:
                     args.append(location[name])
     else:
         args.append(location[obj.get("name")])
@@ -36,13 +36,13 @@ def write(
     outerOrder: list = defaultOuterOrder,
     innerOrder: list = defaultInnerOrder,
 ):
-    if session.get("version") == None:
+    if session.get("version") is None:
         session["version"] = 0  # 'v=0' must be there (only defined version atm)
-    if session.get("name") == None:
+    if session.get("name") is None:
         session["name"] = " "  # 's= ' must be there if no meaningful name set
 
     for media in session.get("media", []):
-        if media.get("payloads") == None:
+        if media.get("payloads") is None:
             media["payloads"] = ""
 
     sdp = []
@@ -52,11 +52,11 @@ def write(
         for obj in grammar[field]:
             if obj.get("name"):
                 if obj["name"] in session.keys():
-                    if session.get(obj["name"]) != None:
+                    if session.get(obj["name"]) is not None:
                         sdp.append(makeLine(field, obj, session))
             elif obj.get("push"):
                 if obj["push"] in session.keys():
-                    if session.get(obj["push"]) != None:
+                    if session.get(obj["push"]) is not None:
                         for el in session.get(obj["push"]):
                             sdp.append(makeLine(field, obj, el))
 
@@ -68,11 +68,11 @@ def write(
             for obj in grammar[field]:
                 if obj.get("name"):
                     if obj["name"] in mLine.keys():
-                        if mLine.get(obj["name"]) != None:
+                        if mLine.get(obj["name"]) is not None:
                             sdp.append(makeLine(field, obj, mLine))
                 elif obj.get("push"):
                     if obj["push"] in mLine.keys():
-                        if mLine.get(obj["push"]) != None:
+                        if mLine.get(obj["push"]) is not None:
                             for el in mLine.get(obj["push"]):
                                 sdp.append(makeLine(field, obj, el))
 

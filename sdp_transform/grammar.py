@@ -73,9 +73,13 @@ grammar = {
             "push": "rtp",
             "reg": r"^rtpmap:(\d*) ([\w\-.]*)(?:\s*\/(\d*)(?:\s*\/(\S*))?)?",
             "names": ["payload", "codec", "rate", "encoding"],
-            "format": lambda o: "rtpmap:%d %s/%s/%s"
-            if o.get("encoding") != None
-            else ("rtpmap:%d %s/%s" if o.get("rate") != None else "rtpmap:%d %s"),
+            "format": lambda o: (
+                "rtpmap:%d %s/%s/%s"
+                if o.get("encoding") is not None
+                else (
+                    "rtpmap:%d %s/%s" if o.get("rate") is not None else "rtpmap:%d %s"
+                )
+            ),
         },
         {
             # a=fmtp:108 profile-level-id=24;object=23;bitrate=64000
@@ -96,9 +100,9 @@ grammar = {
             "name": "rtcp",
             "reg": r"^rtcp:(\d*)(?: (\S*) IP(\d) (\S*))?",
             "names": ["port", "netType", "ipVer", "address"],
-            "format": lambda o: "rtcp:%d %s IP%d %s"
-            if o.get("address") != None
-            else "rtcp:%d",
+            "format": lambda o: (
+                "rtcp:%d %s IP%d %s" if o.get("address") is not None else "rtcp:%d"
+            ),
         },
         {
             # a=rtcp-fb:98 trr-int 100
@@ -112,9 +116,9 @@ grammar = {
             "push": "rtcpFb",
             "reg": r"^rtcp-fb:(\*|\d*) ([\w\-_]*)(?: ([\w\-_]*))?",
             "names": ["payload", "type", "subtype"],
-            "format": lambda o: "rtcp-fb:%s %s %s"
-            if o.get("subtype") != None
-            else "rtcp-fb:%s %s",
+            "format": lambda o: (
+                "rtcp-fb:%s %s %s" if o.get("subtype") is not None else "rtcp-fb:%s %s"
+            ),
         },
         {
             # a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
@@ -124,10 +128,10 @@ grammar = {
             "reg": r"^extmap:(\d+)(?:\/(\w+))?(?: (urn:ietf:params:rtp-hdrext:encrypt))? (\S*)(?: (\S*))?",
             "names": ["value", "direction", "encrypt-uri", "uri", "config"],
             "format": lambda o: "extmap:%d"
-            + ("/%s" if o.get("direction") != None else "")
-            + (" %s" if o.get("encrypt-uri") != None else "")
+            + ("/%s" if o.get("direction") is not None else "")
+            + (" %s" if o.get("encrypt-uri") is not None else "")
             + " %s"
-            + (" %s" if o.get("config") != None else ""),
+            + (" %s" if o.get("config") is not None else ""),
         },
         {
             # a=extmap-allow-mixed
@@ -139,9 +143,11 @@ grammar = {
             "push": "crypto",
             "reg": r"^crypto:(\d*) ([\w_]*) (\S*)(?: (\S*))?",
             "names": ["id", "suite", "config", "sessionConfig"],
-            "format": lambda o: "crypto:%d %s %s %s"
-            if o.get("sessionConfig") != None
-            else "crypto:%d %s %s",
+            "format": lambda o: (
+                "crypto:%d %s %s %s"
+                if o.get("sessionConfig") is not None
+                else "crypto:%d %s %s"
+            ),
         },
         {
             # a=setup:actpass
@@ -204,12 +210,12 @@ grammar = {
         },
         {
             # a=candidate:0 1 UDP 2113667327 203.0.113.1 54400 typ host
-            # a=candidate:1162875081 1 udp 2113937151 192.168.34.75 60017 typ host generation 0 network-id 3 network-cost 10
-            # a=candidate:3289912957 2 udp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 generation 0 network-id 3 network-cost 10
-            # a=candidate:229815620 1 tcp 1518280447 192.168.150.19 60017 typ host tcpfield active generation 0 network-id 3 network-cost 10
-            # a=candidate:3289912957 2 tcp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 tcpfield passive generation 0 network-id 3 network-cost 10
+            # a=candidate:1162875081 1 udp 2113937151 192.168.34.75 60017 typ host generation 0 network-id 3 network-cost 10 # noqa
+            # a=candidate:3289912957 2 udp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 generation 0 network-id 3 network-cost 10 # noqa
+            # a=candidate:229815620 1 tcp 1518280447 192.168.150.19 60017 typ host tcpfield active generation 0 network-id 3 network-cost 10 # noqa
+            # a=candidate:3289912957 2 tcp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 tcpfield passive generation 0 network-id 3 network-cost 10 # noqa
             "push": "candidates",
-            "reg": r"^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcpfield (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?",
+            "reg": r"^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcpfield (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?",  # noqa
             "names": [
                 "foundation",
                 "component",
@@ -226,11 +232,11 @@ grammar = {
                 "network-cost",
             ],
             "format": lambda o: "candidate:%s %d %s %d %s %d typ %s"
-            + (" raddr %s rport %d" if o.get("raddr") != None else "")
-            + (" tcpfield %s" if o.get("tcptype") != None else "")
-            + (" generation %d" if o.get("generation") != None else "")
-            + (" network-id %d" if o.get("network-id") != None else "")
-            + (" network-cost %d" if o.get("network-cost") != None else ""),
+            + (" raddr %s rport %d" if o.get("raddr") is not None else "")
+            + (" tcpfield %s" if o.get("tcptype") is not None else "")
+            + (" generation %d" if o.get("generation") is not None else "")
+            + (" network-id %d" if o.get("network-id") is not None else "")
+            + (" network-cost %d" if o.get("network-cost") is not None else ""),
         },
         {
             # a=end-of-candidates (keep after the candidates line for readability)
@@ -255,8 +261,8 @@ grammar = {
             "reg": r"^ssrc:(\d*) ([\w_-]*)(?::(.*))?",
             "names": ["id", "attribute", "value"],
             "format": lambda o: "ssrc:%d"
-            + (" %s" if o.get("attribute") != None else "")
-            + (":%s" if o.get("value") != None else ""),
+            + (" %s" if o.get("attribute") is not None else "")
+            + (":%s" if o.get("value") is not None else ""),
         },
         {
             # a=ssrc-group:FEC 1 2
@@ -296,9 +302,11 @@ grammar = {
             "name": "sctpmap",
             "reg": r"^sctpmap:([\w_/]*) (\S*)(?: (\S*))?",
             "names": ["sctpmapNumber", "app", "maxMessageSize"],
-            "format": lambda o: "sctpmap:%s %s %s"
-            if o.get("maxMessageSize") != None
-            else "sctpmap:%s %s",
+            "format": lambda o: (
+                "sctpmap:%s %s %s"
+                if o.get("maxMessageSize") is not None
+                else "sctpmap:%s %s"
+            ),
         },
         {
             # a=x-google-flag:conference
@@ -311,9 +319,9 @@ grammar = {
             "push": "rids",
             "reg": r"^rid:([\d\w]+) (\w+)(?: ([\S| ]*))?",
             "names": ["id", "direction", "params"],
-            "format": lambda o: "rid:%s %s %s"
-            if o.get("params") != None
-            else "rid:%s %s",
+            "format": lambda o: (
+                "rid:%s %s %s" if o.get("params") is not None else "rid:%s %s"
+            ),
         },
         {
             # a=imageattr:97 send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320] recv [x=330,y=250]
@@ -332,7 +340,7 @@ grammar = {
             ),
             "names": ["pt", "dir1", "attrs1", "dir2", "attrs2"],
             "format": lambda o: "imageattr:%s %s %s"
-            + (" %s %s" if o.get("dir2") != None else ""),
+            + (" %s %s" if o.get("dir2") is not None else ""),
         },
         {
             # a=simulcast:send 1,2,3;~4,~5 recv 6;~7,~8
@@ -353,7 +361,7 @@ grammar = {
             ),
             "names": ["dir1", "list1", "dir2", "list2"],
             "format": lambda o: "simulcast:%s %s"
-            + (" %s %s" if o.get("dir2") != None else ""),
+            + (" %s %s" if o.get("dir2") is not None else ""),
         },
         {
             # old simulcast draft 03 (implemented by Firefox)
@@ -418,7 +426,7 @@ grammar = {
             "reg": r"^ts-refclk:([^\s=]*)(?:=(\S*))?",
             "names": ["clksrc", "clksrcExt"],
             "format": lambda o: "ts-refclk:%s"
-            + ("=%s" if o.get("clksrcExt") != None else ""),
+            + ("=%s" if o.get("clksrcExt") is not None else ""),
         },
         {
             # RFC7273
@@ -433,10 +441,10 @@ grammar = {
                 "rateDenominator",
             ],
             "format": lambda o: "mediaclk:"
-            + ("id=%s %s" if o.get("id") != None else "%s")
-            + ("=%s" if o.get("mediaClockValue") != None else "")
-            + (" rate=%s" if o.get("rateNumerator") != None else "")
-            + ("/%s" if o.get("rateDenominator") != None else ""),
+            + ("id=%s %s" if o.get("id") is not None else "%s")
+            + ("=%s" if o.get("mediaClockValue") is not None else "")
+            + (" rate=%s" if o.get("rateNumerator") is not None else "")
+            + ("/%s" if o.get("rateDenominator") is not None else ""),
         },
         {
             # a=keywds:keywords
